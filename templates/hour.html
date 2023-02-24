@@ -1,0 +1,292 @@
+<head>
+    <style>
+        /* It's supposed to look like a tree diagram */
+        .tree, .tree ul, .tree li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .tree {
+            margin: 0 0 1em;
+            text-align: center;
+        }
+        .tree, .tree ul {
+            display: table;
+            margin: 0 auto;
+        }
+        .tree ul {
+          width: 100%;
+
+        }
+            .tree li {
+                display: table-cell;
+                padding: .5em 0;
+                vertical-align: top;
+            }
+                /* _________ */
+                .tree li:before {
+                    outline: solid 1px #666;
+                    content: "";
+                    left: 0;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
+                .tree li:first-child:before {left: 50%;}
+                .tree li:last-child:before {right: 50%;}
+
+                .tree code, .tree span {
+                    border: solid .1em #666;
+                    border-radius: .2em;
+                    display: inline-block;
+                    margin: 0 .2em .5em;
+                    padding: .2em .5em;
+                    position: relative;
+                }
+                /* If the tree represents DOM structure */
+                .tree code {
+                    font-family: monaco, Consolas, 'Lucida Console', monospace;
+                }
+
+                    /* | */
+                    .tree ul:before,
+                    .tree code:before,
+                    .tree span:before {
+                        outline: solid 1px #666;
+                        content: "";
+                        height: .5em;
+                        left: 50%;
+                        position: absolute;
+                    }
+                    .tree ul:before {
+                        top: -.5em;
+                    }
+                    .tree code:before,
+                    .tree span:before {
+                        top: -.55em;
+                    }
+
+        /* The root node doesn't connect upwards */
+        .tree > li {margin-top: 0;}
+            .tree > li:before,
+            .tree > li:after,
+            .tree > li > code:before,
+            .tree > li > span:before {
+              outline: none;
+            }
+    </style>
+</head>
+
+<! --- SOURCE FOR CSS: https://codepen.io/ross-angus/pen/jwxMjL, done some minor adjustments --->
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container" style="text-align: center">
+    <h1>{{ single_cat }}</h1>
+    {% if translation == 'EN' %}
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a href=?translate=No" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Svenska</a>
+            <a href="?translate=EN" class="btn btn-primary btn-md active" role="button" aria-pressed="true">English</a>
+            <a href="?translate=GR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Deutsch</a>
+            <a href="?translate=FR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Français</a>
+        </div>
+    {% elif translation == 'GR' %}
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a href=?translate=No" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Svenska</a>
+        <a href="?translate=EN" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">English</a>
+        <a href="?translate=GR" class="btn btn-primary btn-md active" role="button" aria-pressed="true">Deutsch</a>
+        <a href="?translate=FR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Français</a>
+    </div>
+    {% elif translation == 'FR' %}
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a href=?translate=No" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Svenska</a>
+        <a href="?translate=EN" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">English</a>
+        <a href="?translate=GR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Deutsch</a>
+        <a href="?translate=FR" class="btn btn-primary btn-md active" role="button" aria-pressed="true">Français</a>
+    </div>
+    {% else %}
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <a href=?translate=No" class="btn btn-primary btn-md active" role="button" aria-pressed="true">Svenska</a>
+        <a href="?translate=EN" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">English</a>
+        <a href="?translate=GR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Deutsch</a>
+        <a href="?translate=FR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Français</a>
+    </div>
+    {% endif %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Breed</th>
+          <th>Identification</th>
+          <th>Date of Birth</th>
+            <th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+              {% if translated_breed %}
+                  <td>{{ translated_breed }}</td>
+              {% else %}
+                  <td>{{ single_cat.breed }}</td>
+              {%  endif %}
+            <td>{{ single_cat.number }}</td>
+            <td>{{ single_cat.birth }}</td>
+            {% if translated_gender %}
+                  <td>{{ translated_gender }}</td>
+              {% else %}
+                  <td>{{ single_cat.gender }}</td>
+              {%  endif %}
+          </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Appearance code</th>
+          <th>Titles</th>
+          <th>Origin</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+            {% if translated_fur %}
+              <td>{{ translated_fur }}</td>
+          {% else %}
+              <td>{{ single_cat.fur }}</td>
+              {%  endif %}
+            <td>{{ single_cat.title }}</td>
+            <td>{{ single_cat.site }}</td>
+          </tr>
+      </tbody>
+    </table>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Health Information</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr>
+                        {% if translated_health %}
+              <td>{{ translated_health }}</td>
+          {% else %}
+              <td>{{ single_cat.health }}</td>
+              {%  endif %}
+          </tr>
+      </tbody>
+    </table>
+    <h2>The cat has {{ cat_children_amount }} children</h2>
+    <ul class="list-group">
+        {% for cat in cat_children %}
+            <li class="list-group-item"><a href="{% url 'hour' cat.id%}">{{ cat.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <div style="text-align: center">
+    <h2>Family Tree</h2>
+    <ul class="tree" style="align-content: center">
+       <li>
+          <span><a href="{% url 'hour' single_cat.id%}">{{ single_cat }}</a></span>
+          <ul>
+             <li>
+                 {% if cat_father.id %}
+                    <span><a href="{% url 'hour' cat_father.id%}">{{ cat_father.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}
+                <ul>
+                   <li>
+                      {% if cat_grandfather1.id %}
+                    <span><a href="{% url 'hour' cat_grandfather1.id%}">{{ cat_grandfather1.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}
+                      <ul>
+                         <li> {% if cat_grandfather1_father.id %}
+                    <span><a href="{% url 'hour' cat_grandfather1_father.id%}">{{ cat_grandfather1_father.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                         <li> {% if cat_grandfather1_mother.id %}
+                    <span><a href="{% url 'hour' cat_grandfather1_mother.id%}">{{ cat_grandfather1_mother.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                      </ul>
+                   </li>
+                   <li>
+                      {% if cat_grandmother1.id %}
+                    <span><a href="{% url 'hour' cat_grandmother1.id%}">{{ cat_grandmother1.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}
+                      <ul>
+                         <li> {% if cat_grandmother1_father.id %}
+                    <span><a href="{% url 'hour' cat_grandmother1_father.id%}">{{ cat_grandmother1_father.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                         <li> {% if cat_grandmother1_mother.id %}
+                    <span><a href="{% url 'hour' cat_grandmother1_mother.id%}">{{ cat_grandmother1_mother.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                      </ul>
+                   </li>
+                </ul>
+             </li>
+             <li>
+                             {% if cat_mother.id %}
+                    <span><a href="{% url 'hour' cat_mother.id%}">{{ cat_mother.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}
+                <ul>
+                   <li>
+                      {% if cat_grandfather2.id %}
+                    <span><a href="{% url 'hour' cat_grandfather2.id%}">{{ cat_grandfather2.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}
+                      <ul>
+                         <li> {% if cat_grandfather2_father.id %}
+                    <span><a href="{% url 'hour' cat_grandfather2_father.id%}">{{ cat_grandfather2_father.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                         <li> {% if cat_grandfather2_mother.id %}
+                    <span><a href="{% url 'hour' cat_grandfather2_mother.id%}">{{ cat_grandfather2_mother.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                      </ul>
+                   </li>
+                   <li>
+                                            {% if cat_grandmother2.id %}
+                    <span><a href="{% url 'hour' cat_grandmother2.id%}">{{ cat_grandmother2.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}
+                      <ul>
+                         <li> {% if cat_grandmother2_father.id %}
+                    <span><a href="{% url 'hour' cat_grandmother2_father.id%}">{{ cat_grandmother2_father.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                         <li> {% if cat_grandmother2_mother.id %}
+                    <span><a href="{% url 'hour' cat_grandmother2_mother.id%}">{{ cat_grandmother2_mother.name }}</a></span>
+                 {% else %}
+                     <span> NA </span>
+                 {% endif %}</li>
+                      </ul>
+                   </li>
+                </ul>
+             </li>
+          </ul>
+       </li>
+    </ul>
+    </div>
+    </div>
+<! --- SOURCE FOR CSS: https://codepen.io/ross-angus/pen/jwxMjL, done some minor adjustments --->
+{%  endblock %}
