@@ -20,8 +20,8 @@ import HoursManagement
 from HoursManagement import views
 
 urlpatterns = [
-    path('', views.hour_list, name="hour_list"),
-    path('hour/<hour_id>', views.hour, name="hour"),
-    path('teacher', views.teacher_list, name="teacher_list"),
-    path('lesson', views.lesson_list, name="lesson_list"),
+    path('', views.zobrazZoznamPredmetov, name="zobrazZoznamPredmetov"),
+    path('hour/<predmet_id>', views.hour, name="hour"),
+    #path('teacher', views.teacher_list, name="teacher_list"),
+    #path('lesson', views.lesson_list, name="lesson_list"),
 ]

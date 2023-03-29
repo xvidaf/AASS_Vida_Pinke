@@ -5,31 +5,35 @@ from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
 
-from HoursManagement.models import Hour
+from .models import Trieda
+from .models import Student
+from .models import Ucitel
+from .models import Hodina
+from .models import Predmet
 
 #View of hour table
-def hour_list(request):
-    cat_all = Hour.objects.all().order_by('id')
+def zobrazZoznamPredmetov(request):
+    vsetky_predmety = Predmet.objects.all().order_by('id')
     if request.method == "GET":
         page = request.GET.get('page', 1)
-        paginator = Paginator(cat_all, 50)
-        cat_count = cat_all.count()
+        paginator = Paginator(vsetky_predmety, 50)
+        pocet_predmetov = vsetky_predmety.count()
         try:
-            cats = paginator.page(page)
+            predmety = paginator.page(page)
         except PageNotAnInteger:
             #cats = paginator.page(1)
             return redirect(request.META.get('HTTP_REFERER'))
         except EmptyPage:
-            cats = paginator.page(paginator.num_pages)
+            predmety = paginator.page(paginator.num_pages)
 
-        return render(request, 'hour_list.html', { 'cats': cats, 'cat_count': cat_count})
+        return render(request, 'lesson_list.html', { 'predmety': predmety, 'pocet_predmetov': pocet_predmetov})
     else:
         return redirect(request.META.get('HTTP_REFERER'))
 
 
 #View of teacher table
 def teacher_list(request):
-    cat_all = Hour.objects.all().order_by('id')
+    cat_all = Hodina.objects.all().order_by('id')
     if request.method == "GET":
         page = request.GET.get('page', 1)
         paginator = Paginator(cat_all, 50)
@@ -48,7 +52,7 @@ def teacher_list(request):
 
 #View of lesson table
 def lesson_list(request):
-    cat_all = Hour.objects.all().order_by('id')
+    cat_all = Hodina.objects.all().order_by('id')
     if request.method == "GET":
         page = request.GET.get('page', 1)
         paginator = Paginator(cat_all, 50)
@@ -73,8 +77,9 @@ def findParent(parent_id):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 #View hour detail
-def hour(request, hour_id):
-    return HttpResponse("Hello, world. You're at the polls index.")
+def hour(request, predmet_id):
+    predmet = Predmet.objects.get(pk=predmet_id)
+    return render(request, 'hour.html', {'predmet': predmet})
 
 def cat_info_list(request):
     return HttpResponse("Hello, world. You're at the polls index.")

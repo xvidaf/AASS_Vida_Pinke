@@ -85,7 +85,8 @@
 
 {% block content %}
     <div class="container" style="text-align: center">
-    <h1>{{ single_cat }}</h1>
+    <h1>{{ predmet.nazov }}</h1>
+    {% comment %}
     {% if translation == 'EN' %}
         <div class="btn-group" role="group" aria-label="Basic example">
             <a href=?translate=No" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Svenska</a>
@@ -115,32 +116,24 @@
         <a href="?translate=FR" class="btn btn-secondary btn-md active" role="button" aria-pressed="true">Français</a>
     </div>
     {% endif %}
+    {% endcomment %}
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Breed</th>
-          <th>Identification</th>
-          <th>Date of Birth</th>
-            <th>Gender</th>
+          <th>Id</th>
+          <th>Nazov</th>
+          <th>Detaily</th>
         </tr>
       </thead>
       <tbody>
           <tr>
-              {% if translated_breed %}
-                  <td>{{ translated_breed }}</td>
-              {% else %}
-                  <td>{{ single_cat.breed }}</td>
-              {%  endif %}
-            <td>{{ single_cat.number }}</td>
-            <td>{{ single_cat.birth }}</td>
-            {% if translated_gender %}
-                  <td>{{ translated_gender }}</td>
-              {% else %}
-                  <td>{{ single_cat.gender }}</td>
-              {%  endif %}
+            <td>{{ predmet.id }}</td>
+            <td>{{ predmet.nazov }}</td>
+            <td>{{ predmet.detaily }}</td>
           </tr>
       </tbody>
     </table>
+    {% comment %}
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -287,6 +280,7 @@
        </li>
     </ul>
     </div>
+    {% endcomment %}
     </div>
 <! --- SOURCE FOR CSS: https://codepen.io/ross-angus/pen/jwxMjL, done some minor adjustments --->
 {%  endblock %}

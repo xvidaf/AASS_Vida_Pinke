@@ -3,25 +3,21 @@
 
 {% block content %}
     <div class="container">
-        <h2>Showing {{ cat_count }} lessons </h2>
+        <h2>Showing {{ pocet_predmetov }} lessons </h2>
         <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Breed</th>
-           <th>Identification</th>
-          <th>Date of Birth</th>
-          <th>Appearance Code</th>
+          <th>Id</th>
+          <th>Nazov</th>
+          <th>Detaily</th>
         </tr>
       </thead>
       <tbody>
-        {% for cat in cats %}
+        {% for predmet in predmety %}
           <tr>
-              <td><a href="{% url 'hour' cat.id%}">{{ cat.name }}</a></td>
-              <td>{{ cat.breed }}</td>
-              <td>{{ cat.number }}</td>
-            <td>{{ cat.birth }}</td>
-            <td>{{ cat.fur }}</td>
+              <td><a href="{% url 'hour' predmet.id%}">{{ predmet.id }}</a></td>
+              <td>{{ predmet.nazov }}</td>
+              <td>{{ predmet.detaily }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -29,7 +25,7 @@
 
     <nav aria-label="Cat navigation">
 
-          <form class="form-inline" method="get" action="{% url 'hour_list'  %}">
+          <form class="form-inline" method="get" action="{% url 'zobrazZoznamPredmetov'  %}">
                       <div class="form-group input-group-sm" style="display:inline-flex; float:left; margin-right:0px;">
       <input class="form-control me-2" type="search" placeholder="Show Page" aria-label="Search" name="page" >
       <input type="hidden" name="search_term" value={{ searched_term }}>
@@ -40,16 +36,16 @@
 
 
   <ul class="nav justify-content-center">
-      {% if cats.has_previous %}
+      {% if predmety.has_previous %}
           <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page=1">First</a></li>
-          <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page={{ cats.previous_page_number }}">Previous</a></li>
+          <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page={{ predmety.previous_page_number }}">Previous</a></li>
       {% endif %}
   <li class="page-item active" aria-current="page">
-      <span class="page-link" style="background:white ; color: black; border-color: #161c2d">Current page: {{ cats.number }}</span>
+      <span class="page-link" style="background:white ; color: black; border-color: #161c2d">Current page: {{ predmety.number }}</span>
     </li>
-  {% if cats.has_next %}
-    <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page={{ cats.next_page_number}}">Next</a></li>
-      <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page={{ cats.paginator.num_pages}}">Last</a></li>
+  {% if predmety.has_next %}
+    <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page={{ predmety.next_page_number}}">Next</a></li>
+      <li class="page-item"><a class="page-link" style="background:#161c2d ; color: white" href="?page={{ predmety.paginator.num_pages}}">Last</a></li>
   {% endif %}
   </ul>
 </nav>
