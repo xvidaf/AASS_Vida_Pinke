@@ -5,11 +5,8 @@ from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
 
-from .models import Trieda
-from .models import Student
-from .models import Ucitel
-from .models import Hodina
-from .models import Predmet
+from EntityProvider.models import Predmet, Hodina
+
 
 #View of hour table
 def zobrazZoznamPredmetov(request):
@@ -26,7 +23,7 @@ def zobrazZoznamPredmetov(request):
         except EmptyPage:
             predmety = paginator.page(paginator.num_pages)
 
-        return render(request, 'lesson_list.html', { 'predmety': predmety, 'pocet_predmetov': pocet_predmetov})
+        return render(request, 'lesson_list.html', {'predmety': predmety, 'pocet_predmetov': pocet_predmetov})
     else:
         return redirect(request.META.get('HTTP_REFERER'))
 
@@ -46,7 +43,7 @@ def teacher_list(request):
         except EmptyPage:
             cats = paginator.page(paginator.num_pages)
 
-        return render(request, 'teacher_list.html', { 'cats': cats, 'cat_count': cat_count})
+        return render(request, 'teacher_list.html', {'cats': cats, 'cat_count': cat_count})
     else:
         return redirect(request.META.get('HTTP_REFERER'))
 
@@ -65,7 +62,7 @@ def lesson_list(request):
         except EmptyPage:
             cats = paginator.page(paginator.num_pages)
 
-        return render(request, 'lesson_list.html', { 'cats': cats, 'cat_count': cat_count})
+        return render(request, 'lesson_list.html', {'cats': cats, 'cat_count': cat_count})
     else:
         return redirect(request.META.get('HTTP_REFERER'))
 
