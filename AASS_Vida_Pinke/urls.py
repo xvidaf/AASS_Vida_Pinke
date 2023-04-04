@@ -20,5 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('EntityDisplay.urls')),
     path('', include('EntityManagement.urls')),
-    path('', include('TeacherManagemenet.urls')),
+    path('', include('EntityCreationLogging.urls')),
 ]

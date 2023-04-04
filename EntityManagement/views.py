@@ -1,9 +1,8 @@
 from django.shortcuts import render
 
+from EntityCreationLogging.views import writeToLog
 from EntityProvider.forms import TriedaForm
 from EntityProvider.models import Trieda
-
-
 
 # Create your views here.
 
@@ -14,6 +13,7 @@ def subjectCreation(request):
         # check whether it's valid:
         if form.is_valid():
             form.save()
+            writeToLog(request)
     else:
         form = TriedaForm()
 

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -7,6 +9,12 @@ class Ucitel(models.Model):
     priezvisko = models.CharField(max_length=255, null=True)
     rodneCislo = models.CharField(max_length=255, null=True)
     jeMuz = models.BooleanField(null=True)
+
+    def __str__(self):
+        if self.priezvisko:
+            return self.priezvisko
+        else:
+            return "NOT FOUND"
 
 class Trieda(models.Model):
     class Rocnik(models.TextChoices):
@@ -62,3 +70,6 @@ class Hodina(models.Model):
             return self.predmet
         else:
             return "NOT FOUND"
+class LogPredmet(models.Model):
+    creation_date = models.DateTimeField(default=datetime.now, blank=True)
+    nazov_triedy = models.CharField(max_length=255, null=True)
