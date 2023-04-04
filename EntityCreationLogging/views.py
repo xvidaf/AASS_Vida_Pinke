@@ -5,7 +5,8 @@ from django.http import HttpResponse
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 
-from EntityProvider.models import LogPredmet
+from EntityCreationLogging.models import LogPredmet
+
 
 @csrf_exempt
 def writeToLog(request):
