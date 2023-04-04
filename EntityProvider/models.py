@@ -6,7 +6,7 @@ class Ucitel(models.Model):
     meno = models.CharField(max_length=255, null=True)
     priezvisko = models.CharField(max_length=255, null=True)
     rodneCislo = models.CharField(max_length=255, null=True)
-    pohlavie = models.BooleanField(null=True)
+    jeMuz = models.BooleanField(null=True)
 
 class Trieda(models.Model):
     class Rocnik(models.TextChoices):
