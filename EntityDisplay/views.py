@@ -5,19 +5,30 @@ from bs4 import BeautifulSoup
 # Create your views here.
 
 from django.http import HttpResponse
+from django.core import serializers
 
 
 
 #View of hour table
-from EntityManagement.models import Predmet
+from rest_framework.templatetags.rest_framework import data
+
+from EntityProvider.models import Predmet
 
 
 def zobrazZoznamPredmetov(request):
     vsetky_predmety = Predmet.objects.all().order_by('id')
+
+    test = requests.get('http://127.0.0.1:8000/hours')
+    test_json = test.json()
+    print(test_json)
+    for deserialized_object in serializers.deserialize("json", test_json):
+        print(deserialized_object)
+
     if request.method == "GET":
         page = request.GET.get('page', 1)
         paginator = Paginator(vsetky_predmety, 50)
-        pocet_predmetov = vsetky_predmety.count()
+        #pocet_predmetov = vsetky_predmety.count()
+        pocet_predmetov = 2
         try:
             predmety = paginator.page(page)
         except PageNotAnInteger:
@@ -75,7 +86,8 @@ def teacher_list(request):
 
 #View of lesson table
 def lesson_list(request):
-    cat_all = Hodina.objects.all().order_by('id')
+    vsetky_predmety = requests.get('http://localhost:8000/hours')
+    vsetky_predmety = Hodina.objects.all().order_by('id')
     if request.method == "GET":
         page = request.GET.get('page', 1)
         paginator = Paginator(cat_all, 50)
