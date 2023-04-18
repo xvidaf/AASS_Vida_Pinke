@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
-
+import requests
+from bs4 import BeautifulSoup
 # Create your views here.
 
 from django.http import HttpResponse
@@ -23,7 +24,30 @@ def zobrazZoznamPredmetov(request):
         except EmptyPage:
             predmety = paginator.page(paginator.num_pages)
 
-        return render(request, 'lesson_list.html', {'predmety': predmety, 'pocet_predmetov': pocet_predmetov})
+        # SOAP request URL
+        url = "http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso"
+
+        # structured XML
+        payload = """<?xml version=\"1.0\" encoding=\"utf-8\"?>
+                    <soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">
+                        <soap:Body>
+                            <CountryIntPhoneCode xmlns=\"http://www.oorsprong.org/websamples.countryinfo\">
+                                <sCountryISOCode>SK</sCountryISOCode>
+                            </CountryIntPhoneCode>
+                        </soap:Body>
+                    </soap:Envelope>"""
+        # headers
+        headers = {
+            'Content-Type': 'text/xml; charset=utf-8'
+        }
+        # POST request
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        # prints the response
+        Bs_data = BeautifulSoup(response.text, "xml")
+        b_unique = Bs_data.find('m:CountryIntPhoneCodeResult')
+
+        return render(request, 'lesson_list.html', {'predmety': predmety, 'pocet_predmetov': pocet_predmetov, 'soap': b_unique.get_text(strip = True)})
     else:
         return redirect(request.META.get('HTTP_REFERER'))
 
