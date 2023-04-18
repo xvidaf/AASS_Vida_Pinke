@@ -6,10 +6,12 @@ from bs4 import BeautifulSoup
 
 from django.http import HttpResponse
 
-from EntityProvider.models import Predmet, Hodina
 
 
 #View of hour table
+from EntityManagement.models import Predmet
+
+
 def zobrazZoznamPredmetov(request):
     vsetky_predmety = Predmet.objects.all().order_by('id')
     if request.method == "GET":

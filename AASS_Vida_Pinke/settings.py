@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'EntityManagement',
     'EntityDisplay',
     'EntityProvider',
+    'EntityCreationLogging',
 ]
 
 MIDDLEWARE = [
