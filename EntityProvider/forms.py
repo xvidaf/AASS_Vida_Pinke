@@ -1,7 +1,6 @@
 from django import forms
 
-from EntityManagement.models import Predmet
-from EntityProvider.models import Ucitel
+from EntityProvider.models import Ucitel, Predmet
 
 
 # create a ModelForm

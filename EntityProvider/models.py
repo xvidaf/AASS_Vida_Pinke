@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class Ucitel(models.Model):
     bydlisko = models.CharField(max_length=255, null=True)
     meno = models.CharField(max_length=255, null=True)
@@ -15,6 +16,7 @@ class Ucitel(models.Model):
             return self.priezvisko
         else:
             return "NOT FOUND"
+
 
 class Trieda(models.Model):
     class Rocnik(models.TextChoices):
@@ -41,6 +43,13 @@ class Trieda(models.Model):
             return self.nazov
         else:
             return "NOT FOUND"
+
+
+class Predmet(models.Model):
+    detaily = models.CharField(max_length=255, null=True)
+    nazov = models.CharField(max_length=255, null=True)
+    trieda = models.ForeignKey(Trieda, on_delete=models.SET_NULL, null=True, blank=True)
+
 
 """
 class Predmet(models.Model):

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-!=0#*wvf)5=kpve8e$j=t^m-#_qqhc=4!=0=8b1as+n$e_0_m^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'EntityDisplay',
     'EntityProvider',
     'EntityCreationLogging',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'AASS_Vida_Pinke.urls'
 
@@ -74,6 +77,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'AASS_Vida_Pinke.wsgi.application'
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
