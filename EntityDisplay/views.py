@@ -6,8 +6,6 @@ from bs4 import BeautifulSoup
 
 from django.http import HttpResponse
 
-
-
 #View of hour table
 from EntityManagement.models import Predmet
 

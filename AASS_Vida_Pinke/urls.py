@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('EntityDisplay.urls')),
     path('', include('EntityManagement.urls')),
     path('', include('EntityCreationLogging.urls')),
+    path('', include('camundaListener.urls')),
 ]
