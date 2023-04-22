@@ -42,12 +42,12 @@ class Trieda(models.Model):
         else:
             return "NOT FOUND"
 
-"""
+
 class Predmet(models.Model):
     detaily = models.CharField(max_length=255, null=True)
     nazov = models.CharField(max_length=255, null=True)
     trieda = models.ForeignKey(Trieda, on_delete=models.SET_NULL, null=True, blank=True)
-
+"""
 class Student(models.Model):
     bydlisko = models.CharField(max_length=255, null=True)
     meno = models.CharField(max_length=255, null=True)

@@ -4,10 +4,28 @@ import requests
 from bs4 import BeautifulSoup
 # Create your views here.
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
 
-#View of hour table
-from EntityManagement.models import Predmet
+from EntityProvider.models import Predmet, Trieda
+from EntityProvider.serializers import HourSerializer
+
+
+@csrf_exempt
+def zobrazZoznamPredmetovRest(request):
+    if request.method == 'GET':
+        lessons = Predmet.objects.all()
+        serializer = HourSerializer(lessons, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+@csrf_exempt
+def zobrazPredmetRest(request, lesson_id):
+    if request.method == 'GET':
+        lessons = Predmet.objects.all()
+        serializer = HourSerializer(lessons, many=True)
+        return JsonResponse(serializer.data[lesson_id-1], safe=False)
 
 
 def zobrazZoznamPredmetov(request):

@@ -4,4 +4,5 @@ from . import views
 
 urlpatterns = [
     path('writeToLog/', views.writeToLog, name='writeToLog'),
+    path('log', views.writeToLogRest),
 ]
