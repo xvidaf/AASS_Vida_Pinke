@@ -17,12 +17,16 @@ def camundaProces(request):
     print("Sme tu")
     url = 'http://localhost:8080/engine-rest'
     worker_id = 'my-worker'
-    variables = ['InitVariable']  # variables of the process instance
+    variables = ['detaily', 'nazov', 'trieda', 'id_predmetu']  # variables of the process instance
     fetch_and_lock = pycamunda.externaltask.FetchAndLock(url=url, worker_id=worker_id, max_tasks=1)
     fetch_and_lock.add_topic(name='vytvorPredmet', lock_duration=10000, variables=variables)
     tasks = fetch_and_lock()
 
     for task in tasks:
+        subjectToCreate = {"detaily": task.variables['detaily'].value,
+                           "nazov": task.variables['nazov'].value,
+                           "trieda": task.variables['trieda'].value}
+
         status = requests.post('http://127.0.0.1:8000/createSubjectRest', json=subjectToCreate)
         status = literal_eval(status.content.decode('utf-8'))
         complete = pycamunda.externaltask.Complete(url=url, id_=task.id_, worker_id=worker_id)
@@ -56,9 +60,8 @@ def camundaProces(request):
     fetch_and_lock.add_topic(name='zobrazDetail', lock_duration=10000, variables=variables)
     tasks = fetch_and_lock()
 
-    first = 1
     for task in tasks:
-        lesson = requests.get('http://127.0.0.1:8000/zobrazPredmet/1').json()
+        lesson = requests.get('http://127.0.0.1:8000/zobrazPredmet/{}'.format(task.variables['id_predmetu'].value)).json()
         complete = pycamunda.externaltask.Complete(url=url, id_=task.id_, worker_id=worker_id)
         complete.add_variable(name='zobrazDetail', value=lesson)  # Send this variable to the instance
         print(lesson)

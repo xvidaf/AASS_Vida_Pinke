@@ -17,6 +17,8 @@ def zobrazZoznamPredmetovRest(request):
     if request.method == 'GET':
         lessons = Predmet.objects.all()
         serializer = HourSerializer(lessons, many=True)
+        #newdict = {'item': "test"}
+        #newdict.update(serializer.data)
         return JsonResponse(serializer.data, safe=False)
 
 
