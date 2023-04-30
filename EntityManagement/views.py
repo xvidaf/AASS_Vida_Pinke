@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from pytz import unicode
 
 from EntityCreationLogging.views import writeToLog
 from EntityProvider.forms import TriedaForm
@@ -22,18 +23,18 @@ def subjectCreation(request):
             'nazov': request.POST['nazov'],
             'trieda': request.POST['trieda'],
         }
+        serialized_data = pickle.dumps(v, pickle.HIGHEST_PROTOCOL)
         producer.poll(1)
-        producer.produce('NewLesson', v.encode('utf-8'))
+        producer.produce('NewLesson', serialized_data)
         producer.flush()
-        print("Data sent")
 
         # create a form instance and populate it with data from the request:
         form = TriedaForm(request.POST)
         # check whether it's valid:
-        if form.is_valid():
+        """if form.is_valid():
             #form.save()
             #writeToLog(request)
-            pass
+            pass"""
     else:
         form = TriedaForm()
 

@@ -8,6 +8,9 @@ import json
 import pickle
 from threading import Thread
 
+from EntityProvider.forms import TriedaForm
+from EntityProvider.models import Trieda
+
 consumer = Consumer({'bootstrap.servers': 'localhost:9092', 'group.id': 'python-consumer', 'auto.offset.reset': 'earliest'})
 consumer.subscribe(['NewLesson'])
 
@@ -18,15 +21,22 @@ class myClassA(Thread):
         self.start()
     def run(self):
         while True:
-            msg = consumer.poll(1.0)  # timeout
+            print("CONSUMER STARTED")
+            msg = consumer.poll()  # timeout
             if msg is None:
                 continue
             if msg.error():
                 print('Error: {}'.format(msg.error()))
                 continue
-            data = msg.value().decode('utf-8')
-            print(data)
 
+            data = pickle.loads(msg.value())
+            #print("DATA:", data, type(data))
+
+            form = TriedaForm(data)
+            # check whether it's valid:
+            if form.is_valid():
+                form.save()
+                print("FORM CREATED!")
 
 # Create your views here.
 @csrf_exempt
