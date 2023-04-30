@@ -13,16 +13,19 @@ from django.core import serializers
 from rest_framework.templatetags.rest_framework import data
 
 from EntityProvider.models import Predmet
+from KafkaConsumer.views import cons
 
 
 def zobrazZoznamPredmetov(request):
     vsetky_predmety = Predmet.objects.all().order_by('id')
 
-    test = requests.get('http://127.0.0.1:8000/hours')
+    cons(request)
+
+    """test = requests.get('http://127.0.0.1:8000/hours')
     test_json = test.json()
     print(test_json)
     for deserialized_object in serializers.deserialize("json", test_json):
-        print(deserialized_object)
+        print(deserialized_object)"""
 
     if request.method == "GET":
         page = request.GET.get('page', 1)
