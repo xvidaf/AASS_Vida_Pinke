@@ -1,31 +1,54 @@
+import pickle
+
+from confluent_kafka import Producer
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 import requests
 from bs4 import BeautifulSoup
 # Create your views here.
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 
 
 
 #View of hour table
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.templatetags.rest_framework import data
 
 from EntityProvider.models import Predmet
+from EntityProvider.urls import HourSerializer
 from KafkaConsumer.views import cons
 
+@csrf_exempt
+def zobrazZoznamPredmetovRest(request):
+    if request.method == 'GET':
+        lessons = Predmet.objects.all()
+        serializer = HourSerializer(lessons, many=True)
+        producer = Producer({'bootstrap.servers': 'localhost:9092'})
+        print("LESSON LIST Producer started")
+        serialized_data = pickle.dumps(serializer, pickle.HIGHEST_PROTOCOL)
+        producer.poll(1)
+        producer.produce('LessonList', serialized_data)
+        producer.flush()
+        return HttpResponse(200)
+    elif request.method == 'POST':
+        print(request.POST)
+        return render(request, 'lesson_list.html', {'predmety': serializer.data, 'pocet_predmetov': len(serializer.data)})
+
+@csrf_exempt
+def zobrazPredmetRest(request, lesson_id):
+    if request.method == 'GET':
+        lessons = Predmet.objects.all()
+        serializer = HourSerializer(lessons, many=True)
+        for ser in serializer.data:
+            if ser['id'] == lesson_id:
+                return JsonResponse(ser, safe=False)
 
 def zobrazZoznamPredmetov(request):
     vsetky_predmety = Predmet.objects.all().order_by('id')
 
     cons(request)
-
-    """test = requests.get('http://127.0.0.1:8000/hours')
-    test_json = test.json()
-    print(test_json)
-    for deserialized_object in serializers.deserialize("json", test_json):
-        print(deserialized_object)"""
 
     if request.method == "GET":
         page = request.GET.get('page', 1)

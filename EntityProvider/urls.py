@@ -15,6 +15,7 @@ class ClassSerializer(serializers.Serializer):
     ucitel = TeacherSerializer()
 
 class HourSerializer(serializers.Serializer):
+    id = serializers.PrimaryKeyRelatedField(queryset=Predmet.objects.all())
     detaily = serializers.CharField(max_length=100)
     nazov = serializers.CharField(max_length=100)
     trieda = ClassSerializer()

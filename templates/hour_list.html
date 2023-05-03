@@ -17,7 +17,7 @@
       <tbody>
         {% for cat in cats %}
           <tr>
-              <td><a href="{% url 'hour' cat.id%}">{{ cat.name }}</a></td>
+              <td><a href="{% url 'zobrazPredmet' cat.id%}">{{ cat.name }}</a></td>
               <td>{{ cat.breed }}</td>
               <td>{{ cat.number }}</td>
             <td>{{ cat.birth }}</td>

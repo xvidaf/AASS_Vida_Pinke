@@ -15,7 +15,7 @@
       <tbody>
         {% for predmet in predmety %}
           <tr>
-              <td><a href="{% url 'hour' predmet.id%}">{{ predmet.id }}</a></td>
+              <td><a href="{% url 'zobrazPredmet' predmet.id%}">{{ predmet.id }}</a></td>
               <td>{{ predmet.nazov }}</td>
               <td>{{ predmet.detaily }}</td>
           </tr>
