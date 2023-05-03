@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from EntityProvider.forms import TriedaForm
-from confluent_kafka import Producer
+#from confluent_kafka import Producer
+from kafka import KafkaProducer
 import pickle
 
 
@@ -19,25 +20,25 @@ def subjectCreationRest(request):
         trieda = Trieda.objects.get(pk=data['trieda'])
         data = {'detaily': data['detaily'], 'nazov': data['nazov'], 'trieda': trieda}
 
-        producer = Producer({'bootstrap.servers': 'localhost:9092'})
+        producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
         serialized_data = pickle.dumps(data, pickle.HIGHEST_PROTOCOL)
-        producer.poll(1)
-        producer.produce('NewLesson', serialized_data)
-        producer.flush()
+        producer.send('NewLesson', serialized_data)
 
-        #requests.post('http://127.0.0.1:8000/log', json={"nazov": data['nazov']})
+        requests.post('http://127.0.0.1:8000/log', json={"nazov": data['nazov']})
 
-        trieda = TriedaForm(data)
-        if trieda.is_valid():
+        form = TriedaForm(data)
+        if form.is_valid():
             #trieda.save()
             return JsonResponse({"status": "200"}, safe=False)
-        else:
-            return JsonResponse({"status": "400"}, safe=False)
+    else:
+        form = TriedaForm()
+    return render(request, "createSubject.html", {'form': form})
 
 def subjectCreation(request):
     if request.method == 'POST':
 
-        producer = Producer({'bootstrap.servers':'localhost:9092'})
+        #producer = Producer({'bootstrap.servers':'localhost:9092'})
+        producer = KafkaProducer(bootstrap_servers='localhost:9092')
         print("1st Producer started")
         v = {
             'detaily': request.POST['detaily'],
@@ -45,9 +46,7 @@ def subjectCreation(request):
             'trieda': request.POST['trieda'],
         }
         serialized_data = pickle.dumps(v, pickle.HIGHEST_PROTOCOL)
-        producer.poll(1)
-        producer.produce('NewLesson', serialized_data)
-        producer.flush()
+        producer.send('createLesson', serialized_data)
 
         # create a form instance and populate it with data from the request:
         form = TriedaForm(request.POST)
@@ -56,6 +55,7 @@ def subjectCreation(request):
             #form.save()
             #writeToLog(request)
             pass"""
+
     else:
         form = TriedaForm()
 

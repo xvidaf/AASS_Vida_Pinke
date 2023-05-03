@@ -1,7 +1,7 @@
 import pickle
 
 import requests
-from confluent_kafka import Producer
+from kafka import KafkaProducer
 from django.http import HttpResponse
 
 # Create your views here.
@@ -14,14 +14,12 @@ from EntityCreationLogging.models import LogPredmet
 def writeToLogRest(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
-
-        producer = Producer({'bootstrap.servers': 'localhost:9092'})
         print("LOG Producer started")
-        serialized_data = pickle.dumps({"nazov": data['nazov']}, pickle.HIGHEST_PROTOCOL)
-        producer.poll(1)
-        producer.produce('NewLog', serialized_data)
-        producer.flush()
 
+        producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
+        serialized_data = pickle.dumps({"nazov": data['nazov']}, pickle.HIGHEST_PROTOCOL)
+        producer.send('createLog', serialized_data)
+        #requests.get('http://127.0.0.1:8000/zobrazZoznamPredmetov')
         return HttpResponse("Logging successful", status=200)
     else:
         return HttpResponse("Bad request", status=400)

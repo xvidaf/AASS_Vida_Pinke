@@ -23,6 +23,7 @@ urlpatterns = [
     path('hour/<predmet_id>', views.hour, name="hour"),
     path('zobrazPredmet/<int:lesson_id>', views.zobrazPredmetRest, name="zobrazPredmet"),
     path('zobrazZoznamPredmetov', views.zobrazZoznamPredmetovRest, name="zobrazZoznamPredmetovRest"),
+    path('getPredmet/<int:lesson_id>', views.getPredmetRest, name="getPredmet"),
     #path('teacher', views.teacher_list, name="teacher_list"),
     #path('lesson', views.lesson_list, name="lesson_list"),
 ]

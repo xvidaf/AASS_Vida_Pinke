@@ -1,6 +1,7 @@
 import pickle
+import time
 
-from confluent_kafka import Producer
+from kafka import KafkaProducer, KafkaConsumer
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 import requests
@@ -25,26 +26,43 @@ def zobrazZoznamPredmetovRest(request):
     if request.method == 'GET':
         lessons = Predmet.objects.all()
         serializer = HourSerializer(lessons, many=True)
-        producer = Producer({'bootstrap.servers': 'localhost:9092'})
         print("LESSON LIST Producer started")
-        serialized_data = pickle.dumps(serializer, pickle.HIGHEST_PROTOCOL)
-        producer.poll(1)
-        producer.produce('LessonList', serialized_data)
-        producer.flush()
-        return HttpResponse(200)
-    elif request.method == 'POST':
-        print(request.POST)
+        producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
+        serialized_data = pickle.dumps(serializer.data, pickle.HIGHEST_PROTOCOL)
+        producer.send('listLessons', serialized_data)
+
         return render(request, 'lesson_list.html', {'predmety': serializer.data, 'pocet_predmetov': len(serializer.data)})
+
 
 @csrf_exempt
 def zobrazPredmetRest(request, lesson_id):
+    if request.method == 'GET':
+        print("LESSON CONSUMER STARTED")
+        consumer = KafkaConsumer(bootstrap_servers=['localhost:9092'],
+                                 api_version=(0, 10)
+                                 # ,consumer_timeout_ms=1000
+                                 )
+        consumer.subscribe(['lessonDetail'])
+        requests.get('http://127.0.0.1:8000/getPredmet/{}'.format(lesson_id))
+        while True:
+            for msg in consumer:
+                result = pickle.loads(msg.value)
+                print(result)
+                return redirect('http://127.0.0.1:8000/hour/{}'.format(result['id']))
+
+
+@csrf_exempt
+def getPredmetRest(request, lesson_id):
     if request.method == 'GET':
         lessons = Predmet.objects.all()
         serializer = HourSerializer(lessons, many=True)
         for ser in serializer.data:
             if ser['id'] == lesson_id:
+                producer = KafkaProducer(bootstrap_servers='127.0.0.1:9092')
+                serialized_data = pickle.dumps(ser, pickle.HIGHEST_PROTOCOL)
+                producer.send('lessonDetail', serialized_data)
+                print("LESSON SENT")
                 return JsonResponse(ser, safe=False)
-
 def zobrazZoznamPredmetov(request):
     vsetky_predmety = Predmet.objects.all().order_by('id')
 
